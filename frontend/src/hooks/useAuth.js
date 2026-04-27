@@ -1,29 +1,62 @@
-import { useState, useEffect, useCallback } from 'react'
+import { create } from 'zustand'
+import { supabase } from '../services/supabase'
 import { api } from '../services/api'
 
+const useAuthStore = create((set) => ({
+  user: null,
+  loading: true,
+  setUser: (user) => set({ user, loading: false }),
+  setLoading: (loading) => set({ loading })
+}))
+
 export function useAuth() {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const { user, loading, setUser, setLoading } = useAuthStore()
 
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  const refreshUser = async () => {
+    setLoading(true)
+    const { data: { session } } = await supabase.auth.getSession()
+    if (session) {
+      setUser(session.user)
+      api.defaults.headers.common['Authorization'] = `Bearer ${session.access_token}`
+      localStorage.setItem('token', session.access_token)
+    } else {
+      setUser(null)
+      setLoading(false)
     }
-    setLoading(false)
-  }, [])
+  }
 
-  const login = useCallback(async (email) => {
+  const login = async (email) => {
     try {
-      const token = `mock-token-${Date.now()}`
-      localStorage.setItem('token', token)
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-      setUser({ email, id: 'user-1' })
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: window.location.origin
+        }
+      })
+      if (error) throw error
       return { success: true }
     } catch (error) {
       return { success: false, error: error.message }
     }
-  }, [])
+  }
 
-  return { user, loading, login }
+  const logout = async () => {
+    await supabase.auth.signOut()
+    localStorage.removeItem('token')
+    setUser(null)
+  }
+
+  // Handle auth state changes
+  supabase.auth.onAuthStateChange((_event, session) => {
+    if (session) {
+      setUser(session.user)
+      api.defaults.headers.common['Authorization'] = `Bearer ${session.access_token}`
+      localStorage.setItem('token', session.access_token)
+    } else {
+      setUser(null)
+    }
+    setLoading(false)
+  })
+
+  return { user, loading, login, logout, refreshUser }
 }
