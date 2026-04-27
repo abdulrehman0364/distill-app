@@ -71,7 +71,7 @@ export default function ReelCard({ reel }) {
 // src/components/ImportModal.jsx
 
 import { useState } from 'react'
-import { useAddReel } from '../hooks/api'
+import { useAddReel } from '../hooks/useReels'
 
 export default function ImportModal({ onClose }) {
   const [url, setUrl] = useState('')

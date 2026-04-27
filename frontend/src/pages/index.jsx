@@ -83,7 +83,7 @@ export default function LoginPage() {
 // src/pages/VaultPage.jsx
 
 import { useState } from 'react'
-import { useReels, useAddReel } from '../hooks/api'
+import { useReels } from '../hooks/useReels'
 import ReelCard from '../components/ReelCard'
 import ImportModal from '../components/ImportModal'
 
@@ -200,7 +200,7 @@ export default function VaultPage() {
 // src/pages/ReelDetailPage.jsx
 
 import { useParams } from 'react-router-dom'
-import { useReelDetail } from '../hooks/api'
+import { useReelDetail } from '../hooks/useReels'
 import { getCategoryIcon, formatDate } from '../services/api'
 
 export default function ReelDetailPage() {
@@ -308,7 +308,7 @@ export default function ReelDetailPage() {
 // src/pages/CollectionsPage.jsx
 
 import { useState } from 'react'
-import { useCollections, useCreateCollection } from '../hooks/api'
+import { useCollections, useCreateCollection } from '../hooks/useCollections'
 
 export default function CollectionsPage() {
   const { data: collections } = useCollections()
@@ -374,7 +374,7 @@ export default function CollectionsPage() {
 // src/pages/SearchPage.jsx
 
 import { useSearchParams } from 'react-router-dom'
-import { useSearch } from '../hooks/api'
+import { useSearch } from '../hooks/useSearch'
 import ReelCard from '../components/ReelCard'
 
 export default function SearchPage() {
