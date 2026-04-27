@@ -8,7 +8,7 @@ import VaultPage from './pages/VaultPage'
 import ReelDetailPage from './pages/ReelDetailPage'
 import CollectionsPage from './pages/CollectionsPage'
 import SearchPage from './pages/SearchPage'
-import './App.css'
+// App.css removed as styles are in index.css
 
 const queryClient = new QueryClient()
 
