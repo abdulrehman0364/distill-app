@@ -19,7 +19,7 @@
     "groq-sdk": "^0.3.0",
     "axios": "^1.6.5",
     "dotenv": "^16.3.1",
-    "jsonwebtoken": "^9.1.2",
+    "jsonwebtoken": "^9.0.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
     "node-cache": "^5.1.2",
