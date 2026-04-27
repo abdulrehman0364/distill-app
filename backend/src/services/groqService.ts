@@ -86,12 +86,15 @@ export async function extractReelWithGroq(
   try {
     const startTime = Date.now();
 
-    const message = await groq.messages.create({
+    const message = await groq.chat.completions.create({
       model: 'llama2-70b-4096',
       max_tokens: 1500,
       temperature: 0.3,
-      system: EXTRACTION_SYSTEM_PROMPT,
       messages: [
+        {
+          role: 'system',
+          content: EXTRACTION_SYSTEM_PROMPT
+        },
         {
           role: 'user',
           content: `Caption: "${caption || ''}"\n\nTranscript: "${transcript || ''}"`
@@ -100,8 +103,7 @@ export async function extractReelWithGroq(
     });
 
     const processingTime = Date.now() - startTime;
-    const responseText =
-      message.content[0].type === 'text' ? message.content[0].text : '';
+    const responseText = message.choices[0]?.message?.content || '';
 
     // Clean JSON response (remove markdown code blocks if present)
     let cleanedResponse = responseText.trim();
