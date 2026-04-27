@@ -266,5 +266,4 @@ CREATE POLICY "Users can insert own highlights" ON highlights
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 -- Done
-\c
 SELECT 'distill. Database Schema Successfully Created!' as status;
